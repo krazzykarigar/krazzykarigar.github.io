@@ -5,93 +5,23 @@
   <title>Company Portfolio</title>
   <style>
     html, body {
-      margin: 0; padding: 0;
-      width: 100vw; height: 100vh;
-      background: #fafafa;
-      font-family: sans-serif;
+      height: 100%;
+      margin: 0;
     }
-    #loader {
-      position: fixed;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      z-index: 10;
-      background: rgba(255,255,255,0.9);
-      padding: 2em;
-      border-radius: 12px;
-      box-shadow: 0 4px 24px #aaa4;
-    }
-    .spinner {
-      border: 8px solid #f3f3f3;
-      border-top: 8px solid #007bff;
-      border-radius: 50%;
-      width: 60px;
-      height: 60px;
-      animation: spin 1s linear infinite;
-      margin-bottom: 1em;
-    }
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-    #pdf-container {
-      padding: 1rem 0;
-      max-width: 1000px;
-      margin: 0 auto;
-    }
-    .pdf-page {
-      display: block;
-      margin: 1em auto;
-      box-shadow: 0 2px 8px #0001;
-      background: white;
-      border-radius: 4px;
-      width: 95vw;
-      max-width: 900px;
+    .pdf-viewer {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      width: 100vw;
+      height: 100vh;
+      border: none;
     }
   </style>
 </head>
 <body>
-  <div id="loader">
-    <div class="spinner"></div>
-    <div>Loading portfolio…</div>
-  </div>
-  <div id="pdf-container"></div>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.2.67/pdf.min.js"></script>
-  <script>
-    const url = 'krazzy-portfolio.pdf'; // Your PDF filename
-    const container = document.getElementById('pdf-container');
-    const loader = document.getElementById('loader');
-
-    pdfjsLib.getDocument(url).promise.then(function(pdf) {
-      // Function to render a single page
-      function renderPage(pageNumber) {
-        return pdf.getPage(pageNumber).then(function(page) {
-          const viewport = page.getViewport({ scale: 1.3 });
-          const canvas = document.createElement('canvas');
-          canvas.className = 'pdf-page';
-          const context = canvas.getContext('2d');
-          canvas.height = viewport.height;
-          canvas.width = viewport.width;
-          container.appendChild(canvas);
-
-          return page.render({ canvasContext: context, viewport: viewport }).promise;
-        });
-      }
-
-      // Sequentially render all pages
-      let promise = Promise.resolve();
-      for (let num = 1; num <= pdf.numPages; num++) {
-        promise = promise.then(() => renderPage(num));
-      }
-
-      // When all pages are rendered, hide loader
-      promise.then(function() {
-        loader.style.display = 'none';
-      });
-    }).catch(function(error) {
-      loader.innerHTML = "<b>Error loading PDF:</b> " + error.message;
-    });
-  </script>
+  <iframe
+    class="pdf-viewer"
+    src="company-portfolio.pdf#toolbar=0"
+    title="Company Portfolio"
+  ></iframe>
 </body>
 </html>
