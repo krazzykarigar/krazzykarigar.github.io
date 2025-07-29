@@ -2,26 +2,75 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Krazzy Portfolio</title>
+  <title>Company Portfolio</title>
   <style>
     html, body {
       height: 100%;
       margin: 0;
     }
+    .container {
+      width: 100vw;
+      height: 100vh;
+      position: relative;
+    }
     .pdf-viewer {
-      position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
       width: 100vw;
       height: 100vh;
       border: none;
+      display: none; /* Hidden until loaded */
+    }
+    .loader {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-family: sans-serif;
+      z-index: 10;
+    }
+    .spinner {
+      border: 8px solid #f3f3f3;
+      border-top: 8px solid #007bff;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      animation: spin 1s linear infinite;
+      margin-bottom: 1em;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
     }
   </style>
 </head>
 <body>
-  <iframe
-    class="pdf-viewer"
-    src="krazzy-portfolio.pdf#toolbar=0"
-    title="Krazzy Portfolio"
-  ></iframe>
+  <div class="container">
+    <div class="loader" id="loader">
+      <div class="spinner"></div>
+      <div>Loading portfolio…</div>
+    </div>
+    <iframe
+      id="pdf"
+      class="pdf-viewer"
+      src="krazzy-portfolio.pdf#toolbar=0"
+      title="Company Portfolio"
+    ></iframe>
+  </div>
+  <script>
+    const iframe = document.getElementById('pdf');
+    const loader = document.getElementById('loader');
+
+    // Listen for PDF load event
+    iframe.onload = function() {
+      loader.style.display = 'none';
+      iframe.style.display = 'block';
+    };
+
+    // Fallback: hide loader if PDF fails to load after a timeout (e.g., 12s)
+    setTimeout(() => {
+      loader.style.display = 'none';
+      iframe.style.display = 'block';
+    }, 12000);
+  </script>
 </body>
 </html>
